@@ -1,0 +1,80 @@
+﻿<Window x:Class="HashCalc.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:HashCalc"
+        mc:Ignorable="d"
+        Title="TDM Hash Calc" Height="222" Width="500" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" Background="#FF212121" Icon="HDB Logo - Blue 2016 - Transparent.ico">
+
+    <Window.Resources>
+        <Style x:Key="SelectFile_Button" TargetType="{x:Type Button}">
+            <Setter Property="Background" Value="#FF3498DB" />
+            <Setter Property="VerticalAlignment" Value="Top" />
+            <Setter Property="Margin" Value="147,49,147,0" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="Height" Value="30" />
+            <Setter Property="BorderThickness" Value="0,0,0,3" />
+            <Setter Property="BorderBrush" Value="#FF2980B9" />
+
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                BorderBrush="{TemplateBinding BorderBrush}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="BorderBrush" Value="#FF3498DB"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" Value="#FF2980B9" />
+                                <Setter Property="BorderBrush" Value="#FF2980B9"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+
+        </Style>
+    </Window.Resources>
+    <Grid IsHitTestVisible="True">
+        <Button x:Name="btnSelectFile" Style="{StaticResource SelectFile_Button}" Content="Select File" Click="btnSelectFile_Click" Height="35" />
+        <TextBlock x:Name="infoSelectFile" Margin="127,123,127,0" TextWrapping="Wrap" Text="Select a File to begin" VerticalAlignment="Top" TextAlignment="Center" Foreground="White" Height="20" FontSize="14"/>
+        <TextBlock x:Name="tbxSelected" Margin="10,23,10,0" VerticalAlignment="Top" Foreground="White" TextAlignment="Center"/>
+
+        <Grid x:Name="gridOutput" Margin="0,84,0,1" IsHitTestVisible="True" Visibility="Hidden">
+            <CheckBox x:Name="chkMD5" Content="MD5" HorizontalAlignment="Left" Margin="11,13,0,0" VerticalAlignment="Top" Foreground="White" Checked="chkMD5_Checked"/>
+            <CheckBox x:Name="chkSHA1" Content="SHA1" HorizontalAlignment="Left" Margin="11,33,0,0" VerticalAlignment="Top" Foreground="White" Checked="chkSHA1_Checked"/>
+            <CheckBox x:Name="chkSHA256" Content="SHA256" HorizontalAlignment="Left" Margin="11,53,0,0" VerticalAlignment="Top" Foreground="White" Checked="chkSHA256_Checked"/>
+            <CheckBox x:Name="chkSHA512" Content="SHA512" HorizontalAlignment="Left" Margin="11,73,0,0" VerticalAlignment="Top" Foreground="White" Checked="chkSHA512_Checked"/>
+            <TextBox x:Name="txtMD5" Height="15" Margin="93,13,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="10" HorizontalAlignment="Left" Width="367" IsReadOnly="True" Background="{x:Null}" Foreground="White"/>
+            <TextBox x:Name="txtSHA1" HorizontalAlignment="Left" Height="15" Margin="93,33,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="367" FontSize="10" IsReadOnly="True" Background="{x:Null}" Foreground="White"/>
+            <TextBox x:Name="txtSHA256" HorizontalAlignment="Left" Height="15" Margin="93,53,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="367" FontSize="10" IsReadOnly="True" Background="{x:Null}" Foreground="White"/>
+            <TextBox x:Name="txtSHA512" HorizontalAlignment="Left" Height="15" Margin="93,73,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="367" FontSize="10" IsReadOnly="True" Background="{x:Null}" Foreground="White"/>
+            <ProgressBar x:Name="pbMD5" HorizontalAlignment="Left" Height="15" Margin="93,13,0,0" VerticalAlignment="Top" Width="367" Background="{x:Null}" Foreground="#FF2ECC71" IsIndeterminate="True" Visibility="Hidden"/>
+            <ProgressBar x:Name="pbSHA1" HorizontalAlignment="Left" Height="15" Margin="93,33,0,0" VerticalAlignment="Top" Width="367" Background="{x:Null}" Foreground="#FF2ECC71" IsIndeterminate="True" Visibility="Hidden"/>
+            <ProgressBar x:Name="pbSHA256" HorizontalAlignment="Left" Height="15" Margin="93,53,0,0" VerticalAlignment="Top" Width="367" Background="{x:Null}" Foreground="#FF2ECC71" IsIndeterminate="True" Visibility="Hidden"/>
+            <ProgressBar x:Name="pbSHA512" HorizontalAlignment="Left" Height="15" Margin="93,73,0,0" VerticalAlignment="Top" Width="367" Background="{x:Null}" Foreground="#FF2ECC71" IsIndeterminate="True" Visibility="Hidden"/>
+        </Grid>
+        <Button x:Name="btnSaveToFile" Content="Save to File" HorizontalAlignment="Left" Margin="51,46,0,0" VerticalAlignment="Top" Width="81" Height="20" Click="btnSaveToFile_Click" IsEnabled="False"/>
+        <Button x:Name="btnClear" Content="Clear" HorizontalAlignment="Left" Margin="51,66,0,0" VerticalAlignment="Top" Width="81" Height="20" Click="btnClear_Click" IsEnabled="False"/>
+        <Button x:Name="btnDBLookup" Content="DB Lookup" Margin="0,46,51,0" VerticalAlignment="Top" Height="20" HorizontalAlignment="Right" Width="81" IsEnabled="False"/>
+        <Button x:Name="btnCompare" Content="Compare" Margin="0,66,51,0" VerticalAlignment="Top" Height="20" HorizontalAlignment="Right" Width="81" Click="btnCompare_Click_1" IsEnabled="False"/>
+        <Grid x:Name="gridCompareOverlay" Margin="10" Visibility="Hidden">
+            <Grid.Background>
+                <SolidColorBrush Color="#FF212121" Opacity="0.965"/>
+            </Grid.Background>
+            <TextBox x:Name="txtCompareInput" Margin="10,76,10,0" TextWrapping="Wrap" Background="#FF212121" Foreground="White" TextAlignment="Center" IsUndoEnabled="False" Height="20" VerticalAlignment="Top" BorderBrush="#FF3498DB" TextChanged="txtCompareInput_TextChanged"/>
+            <TextBlock x:Name="tbxCompare" HorizontalAlignment="Left" Margin="10,51,0,0" TextWrapping="Wrap" Text="Enter Value to compare" VerticalAlignment="Top" Width="454" Height="20" Foreground="White" FontSize="14" TextAlignment="Center" LineHeight="36"/>
+            <TextBlock x:Name="tbxCompareMatchResults" HorizontalAlignment="Left" Margin="10,102,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="28" Width="454" TextAlignment="Center" Foreground="White" LineHeight="6" FontSize="20"/>
+            <Button x:Name="btnCompareClose" Content="x&#xD;&#xA;" HorizontalAlignment="Left" VerticalAlignment="Top" Width="32" Height="32" FontSize="18" Background="#FFE74C3C" BorderBrush="#FFC0392B" Foreground="#FFECF0F1" Click="btnCompareClose_Click"/>
+        </Grid>
+        <Button x:Name="btnInfo" Margin="0,5,5,0" Background="#8e44ad" BorderThickness="0" HorizontalAlignment="Right" Width="28" Height="28" VerticalAlignment="Top" Click="btnInfo_Click" FontSize="16" Foreground="White">
+            i
+        </Button>
+    </Grid>
+</Window>
