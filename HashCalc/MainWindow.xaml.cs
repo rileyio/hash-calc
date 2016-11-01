@@ -1,9 +1,10 @@
 ﻿using System.Windows;
 using cslog;
 using System;
-using System.Security.Cryptography;
 using System.Collections.Generic;
 using System.Windows.Controls;
+using Microsoft.Win32;
+using System.ComponentModel;
 
 namespace HashCalc
 {
@@ -12,6 +13,11 @@ namespace HashCalc
     /// </summary>
     public partial class MainWindow : Window
     {
+        private static OpenFileDialog FileDialog;
+        private static UserFile SelectedFile;
+        private static Calc HashCalc;
+        private static MainWindow GUI;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -23,6 +29,76 @@ namespace HashCalc
             //Logger.DebugWindow();
 
             Calc.GUI = this;
+            GUI = this;
+        }
+
+        internal static void OpenFile()
+        {
+            FileDialog = new OpenFileDialog();
+            FileDialog.Title = "Select File to Hash";
+            FileDialog.Multiselect = false;
+            FileDialog.FileOk += new CancelEventHandler(FileOK);
+
+            FileDialog.ShowDialog();
+            Logger.Log("Open File Dialog");
+        }
+
+        private static void FileOK(object sender, CancelEventArgs e)
+        {
+            GUI.ResetGUI();
+            SelectedFile = new UserFile(FileDialog);
+
+            Logger.Log("File Selected: " + SelectedFile.Name);
+            Logger.Object<UserFile>(SelectedFile);
+
+            // Initialize Hash
+            HashCalc = new Calc(SelectedFile);
+
+            // Update Multiple elements
+            new GUIUpdate(new List<GUIUpdate>() {
+                // Enable Clear button
+                new GUIUpdate(GUI.btnClear, "IsEnabled", true),
+                // Set GUI selected item
+                new GUIUpdate(GUI.tbxSelected, "Text", SelectedFile.Name),
+                // Hide INFO message
+                new GUIUpdate(GUI.infoSelectFile, "Visibility", Visibility.Hidden),
+                new GUIUpdate(GUI.gridOutput, "Visibility", Visibility.Visible)
+            }).Update();
+        }
+
+        private void ResetGUI()
+        {
+            // Update Multiple elements
+            new GUIUpdate(new List<GUIUpdate>() {
+                // Reset Textboxes
+                new GUIUpdate(this.txtMD5, "Text", ""),
+                new GUIUpdate(this.txtSHA1, "Text", ""),
+                new GUIUpdate(this.txtSHA256, "Text", ""),
+                new GUIUpdate(this.txtSHA512, "Text", ""),
+                // Reset Checkboxes
+                new GUIUpdate(this.chkMD5, "IsChecked", false),
+                new GUIUpdate(this.chkSHA1, "IsChecked", false),
+                new GUIUpdate(this.chkSHA256, "IsChecked", false),
+                new GUIUpdate(this.chkSHA512, "IsChecked", false),
+                // Enable all checkboxes
+                new GUIUpdate(this.chkMD5, "IsEnabled", true),
+                new GUIUpdate(this.chkSHA1, "IsEnabled", true),
+                new GUIUpdate(this.chkSHA256, "IsEnabled", true),
+                new GUIUpdate(this.chkSHA512, "IsEnabled", true),
+                // Hide Checkboxes & Text Inputs
+                new GUIUpdate(this.gridOutput, "Visibility", Visibility.Hidden),
+                // Reset UI to start
+                new GUIUpdate(this.infoSelectFile, "Visibility", Visibility.Visible),
+                // Reset File & path
+                new GUIUpdate(this.tbxSelected, "Text", ""),
+                // Disable compare button
+                new GUIUpdate(this.btnCompare, "IsEnabled", false),
+                // Disable clear button
+                new GUIUpdate(this.btnClear, "IsEnabled", false),
+                // Disable Save button
+                new GUIUpdate(this.btnSaveToFile, "IsEnabled", false)
+            })
+            .Update(); // Perform update on all elements
         }
 
         /// <summary>
@@ -195,7 +271,7 @@ namespace HashCalc
         {
             try
             {
-                Calc.OpenFile();
+                OpenFile();
             }
             catch (System.Exception ex)
             {
@@ -205,41 +281,13 @@ namespace HashCalc
 
         private void btnClear_Click(object sender, RoutedEventArgs e)
         {
-            // Update Multiple elements
-            new GUIUpdate(new List<GUIUpdate>() {
-                // Reset Textboxes
-                new GUIUpdate(this.txtMD5, "Text", ""),
-                new GUIUpdate(this.txtSHA1, "Text", ""),
-                new GUIUpdate(this.txtSHA256, "Text", ""),
-                new GUIUpdate(this.txtSHA512, "Text", ""),
-                // Reset Checkboxes
-                new GUIUpdate(this.chkMD5, "IsChecked", false),
-                new GUIUpdate(this.chkSHA1, "IsChecked", false),
-                new GUIUpdate(this.chkSHA256, "IsChecked", false),
-                new GUIUpdate(this.chkSHA512, "IsChecked", false),
-                // Enable all checkboxes
-                new GUIUpdate(this.chkMD5, "IsEnabled", true),
-                new GUIUpdate(this.chkSHA1, "IsEnabled", true),
-                new GUIUpdate(this.chkSHA256, "IsEnabled", true),
-                new GUIUpdate(this.chkSHA512, "IsEnabled", true),
-                // Hide Checkboxes & Text Inputs
-                new GUIUpdate(this.gridOutput, "Visibility", Visibility.Hidden),
-                // Reset UI to start
-                new GUIUpdate(this.infoSelectFile, "Visibility", Visibility.Visible),
-                // Reset File & path
-                new GUIUpdate(this.tbxSelected, "Text", ""),
-                // Disable compare button
-                new GUIUpdate(this.btnCompare, "IsEnabled", false),
-                // Disable clear button
-                new GUIUpdate(this.btnClear, "IsEnabled", false)
-            })
-            .Update(); // Perform update on all elements
+            this.ResetGUI();
         }
 
         private void chkMD5_Checked(object sender, RoutedEventArgs e)
         {
-            Calc.CheckBoxEvent(
-                MD5.Create(),
+            HashCalc.CheckBoxEvent(
+                Algorithm.MD5,
                 chkMD5,
                 pbMD5,
                 txtMD5
@@ -251,8 +299,8 @@ namespace HashCalc
 
         private void chkSHA1_Checked(object sender, RoutedEventArgs e)
         {
-            Calc.CheckBoxEvent(
-                SHA1.Create(),
+            HashCalc.CheckBoxEvent(
+                Algorithm.SHA1,
                 chkSHA1,
                 pbSHA1,
                 txtSHA1
@@ -264,8 +312,8 @@ namespace HashCalc
 
         private void chkSHA256_Checked(object sender, RoutedEventArgs e)
         {
-            Calc.CheckBoxEvent(
-                SHA256.Create(),
+            HashCalc.CheckBoxEvent(
+                Algorithm.SHA256,
                 chkSHA256,
                 pbSHA256,
                 txtSHA256
@@ -277,8 +325,8 @@ namespace HashCalc
 
         private void chkSHA512_Checked(object sender, RoutedEventArgs e)
         {
-            Calc.CheckBoxEvent(
-                SHA512.Create(),
+            HashCalc.CheckBoxEvent(
+                Algorithm.SHA512,
                 chkSHA512,
                 pbSHA512,
                 txtSHA512
@@ -321,7 +369,7 @@ namespace HashCalc
 
         private void btnSaveToFile_Click(object sender, RoutedEventArgs e)
         {
-
+            HashCalc.SaveToFile();
         }
     }
 }

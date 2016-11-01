@@ -1,23 +1,26 @@
-﻿using Microsoft.Win32;
-using System.ComponentModel;
-using cslog;
-using System.Windows;
-using System.Security.Cryptography;
+﻿using System.Windows;
 using System.Windows.Controls;
 using System.Collections.Generic;
+using System.IO;
+using System;
 
 namespace HashCalc
 {
-    internal static class Calc
+    internal class Calc
     {
         internal static MainWindow GUI;
 
-        // Select File
-        private static OpenFileDialog FileDialog;
-        private static Hash FileHash;
-        internal static UserFile SelectedFile;
+        private FileInfo SelectedFile;
+        private Hash FHash;
+        private FileHashes FileHashValues = new FileHashes();
+        private bool IsSingleFile;
 
-        internal static async void CheckBoxEvent(HashAlgorithm algo, CheckBox cb, ProgressBar pb, TextBox tb)
+        private FileInfo GetFileInfo(string pathToFile)
+        {
+            return new FileInfo(pathToFile);
+        }
+
+        internal async void CheckBoxEvent(Algorithm algo, CheckBox cb, ProgressBar pb, TextBox tb)
         {
             if (cb.IsChecked == true)
             {
@@ -25,60 +28,50 @@ namespace HashCalc
                 new GUIUpdate(pb, "Visibility", Visibility.Visible).Update();
 
                 // Start Hash Task
-                string result = await FileHash.GetFileHash(algo);
+                FileHash result = await FHash.GetFileHash(algo);
+
+                // Update FileHashValues
+                FileHashValues.Add(result);
 
                 // Update Multiple elements
                 new GUIUpdate(new List<GUIUpdate>() {
                     // When complete update GUI text box to contain calculated value
-                    new GUIUpdate(tb, "Text", result),
+                    new GUIUpdate(tb, "Text", result.Value),
                     // Remove ProgressBar
                     new GUIUpdate(pb, "Visibility", Visibility.Hidden),
                     // Enable Compare button
-                    new GUIUpdate(GUI.btnCompare, "IsEnabled", true)
+                    new GUIUpdate(GUI.btnCompare, "IsEnabled", true),
+                    // Enable Save to File Button
+                    new GUIUpdate(GUI.btnSaveToFile, "IsEnabled", true)
                 }).Update();
             }
         }
 
-        internal static void CheckBoxUnchecked(ProgressBar pb, TextBox tb)
+        internal void SaveToFile()
         {
-            // Set Progress Bar visibility
-            MainWindow.UpdateGUI(new GUIUpdate(pb, "Visibility", Visibility.Hidden));
-
-            // Set Textbox contents
-            MainWindow.UpdateGUI(new GUIUpdate(tb, "Text", ""));
+            string destination = Path.GetDirectoryName(SelectedFile.FullName);
+            Writer writer = new Writer(destination, SelectedFile, FileHashValues, IsSingleFile);
         }
 
-        internal static void OpenFile()
+        //internal static void CheckBoxUnchecked(ProgressBar pb, TextBox tb)
+        //{
+        //    // Set Progress Bar visibility
+        //    MainWindow.UpdateGUI(new GUIUpdate(pb, "Visibility", Visibility.Hidden));
+
+        //    // Set Textbox contents
+        //    MainWindow.UpdateGUI(new GUIUpdate(tb, "Text", ""));
+        //}
+
+        internal Calc(UserFile file)
         {
-            FileDialog = new OpenFileDialog();
-            FileDialog.Title = "Select File to Hash";
-            FileDialog.Multiselect = false;
-            FileDialog.FileOk += new CancelEventHandler(FileOK);
+            // Get File info for single file
+            this.SelectedFile = GetFileInfo(file.FullFilePath);
 
-            FileDialog.ShowDialog();
-            Logger.Log("Open File Dialog");
-        }
+            // Set Cacl properties
+            this.IsSingleFile = true;
 
-        private static void FileOK(object sender, CancelEventArgs e)
-        {
-            SelectedFile = new UserFile(FileDialog);
-
-            Logger.Log("File Selected: " + SelectedFile.Name);
-            Logger.Object<UserFile>(SelectedFile);
-
-            // Initialize Hash
-            FileHash = new Hash(SelectedFile);
-
-            // Update Multiple elements
-            new GUIUpdate(new List<GUIUpdate>() {
-                // Enable Clear button
-                new GUIUpdate(GUI.btnClear, "IsEnabled", true),
-                // Set GUI selected item
-                new GUIUpdate(GUI.tbxSelected, "Text", SelectedFile.Name),
-                // Hide INFO message
-                new GUIUpdate(GUI.infoSelectFile, "Visibility", Visibility.Hidden),
-                new GUIUpdate(GUI.gridOutput, "Visibility", Visibility.Visible)
-        }).Update();
+            // Setup Hash
+            this.FHash = new Hash(this.SelectedFile);
         }
     }
 }

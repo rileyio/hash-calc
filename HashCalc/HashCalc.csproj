@@ -26,6 +26,8 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>false</MapFileExtensions>
+    <SupportUrl>https://github.com/thejaydox/hash-calc/issues</SupportUrl>
+    <TargetCulture>en-CA</TargetCulture>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
     <ApplicationRevision>0</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
@@ -58,9 +60,6 @@
     <ApplicationIcon>HDB Logo - Blue 2016 - Transparent.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="cslog">
-      <HintPath>..\..\Logger\Logger\bin\Debug\cslog.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -84,6 +83,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Writer.cs" />
     <Page Include="About.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -101,6 +101,7 @@
     </Compile>
     <Compile Include="Calc.cs" />
     <Compile Include="Hash.cs" />
+    <Compile Include="Logger.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>

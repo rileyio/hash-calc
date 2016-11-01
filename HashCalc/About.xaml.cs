@@ -31,5 +31,10 @@ namespace HashCalc
         {
             System.Diagnostics.Process.Start("https://github.com/TheJaydox/hash-calc/issues/new");
         }
+
+        private void btnCloseLicenses_Click(object sender, RoutedEventArgs e)
+        {
+            gridLicenses.Visibility = Visibility.Hidden;
+        }
     }
 }

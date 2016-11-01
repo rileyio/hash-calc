@@ -16,6 +16,9 @@ namespace HashCalc
         Invalid
     }
 
+    /// <summary>
+    /// Pseudo collection of Flat Color Brushes
+    /// </summary>
     public class FlatColor
     {
         public static Brush Red = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#e74c3c"));
@@ -27,12 +30,33 @@ namespace HashCalc
         public static Brush DarkBlue = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#2980b9"));
     }
 
+    /// <summary>
+    /// File Hash value and Algorithm name
+    /// </summary>
+    internal class FileHash
+    {
+        internal string Algorithm;
+        internal string Value;
+
+        internal FileHash(string algorithm, string value)
+        {
+            this.Algorithm = algorithm;
+            this.Value = value;
+        }
+    }
+
+    /// <summary>
+    /// Collection of File Hashes - Example usage: for a single file, collect all
+    ///                                            algorithms calculated with.
+    /// </summary>
     internal class FileHashes
     {
-        internal string MD5 = "";
-        internal string SHA1 = "";
-        internal string SHA256 = "";
-        internal string SHA512 = "";
+        internal List<FileHash> Hashes = new List<FileHash>();
+
+        internal void Add(FileHash hash)
+        {
+            this.Hashes.Add(hash);
+        }
     }
 
     [Serializable]

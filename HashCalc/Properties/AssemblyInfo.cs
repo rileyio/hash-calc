@@ -7,12 +7,12 @@ using System.Windows;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("HashCalc")]
+[assembly: AssemblyTitle("File Hash Calculator")]
 [assembly: AssemblyDescription("Simple file Checksum/Hash calculator")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("TheDoxMedia")]
+[assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("HashCalc")]
-[assembly: AssemblyCopyright("Copyright © TheDoxMedia 2016")]
+[assembly: AssemblyCopyright("Copyright (c) 2016 Jared Booker <jay@tdm.io> (tdm.io)")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

@@ -1,30 +1,46 @@
 ﻿using System.Text;
-using System.Security.Cryptography;
 using System.IO;
-using System.Windows;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using System;
+using System.Security.Cryptography;
 
 namespace HashCalc
 {
+    /// <summary>
+    /// Retrieve Algorithm via:      Algorithm.SHA512
+    /// Available Methods/Props:     .Algo()   // Type:HashAlgorithm
+    ///                              .Name     // Type:String
+    /// </summary>
+    public class Algorithm
+    {
+        public string Name;
+        public HashAlgorithm Algo;
+
+        private Algorithm(string algoString, HashAlgorithm algo)
+        {
+            Name = algoString;
+            Algo = algo;
+        }
+
+        public static Algorithm MD5 { get { return new Algorithm("MD5", System.Security.Cryptography.MD5.Create()); } }
+        public static Algorithm SHA1 { get { return new Algorithm("SHA1", System.Security.Cryptography.SHA1.Create()); } }
+        public static Algorithm SHA256 { get { return new Algorithm("SHA256", System.Security.Cryptography.SHA256.Create()); } }
+        public static Algorithm SHA512 { get { return new Algorithm("SHA512", System.Security.Cryptography.SHA512.Create()); } }
+    }
+
+    /// <summary>
+    /// Used for calculating hash values
+    /// </summary>
     internal class Hash
     {
         // For full Directory hashing
-        internal string PassedDirectoryPath;
+        //internal string PassedDirectoryPath;
         internal List<FileInfo> DirectoryFiles = new List<FileInfo>();
 
         // For individual file hashing
-        internal string PassedFilePath;
         internal FileInfo SelectedFile;
-        internal FileHashes Hashes = new FileHashes();
 
-        private FileInfo GetFileInfo(string pathToFile)
-        {
-            return new FileInfo(pathToFile);
-        }
-
-        private string HashFile(HashAlgorithm algo, string file)
+        private FileHash HashFile(Algorithm algo, string file)
         {
             byte[] ByteHash = null;
             StringBuilder sb = new StringBuilder();
@@ -32,7 +48,7 @@ namespace HashCalc
             // Stream read file & compute hash
             using (FileStream fs = new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
-                ByteHash = algo.ComputeHash(fs);
+                ByteHash = algo.Algo.ComputeHash(fs);
             }
 
             // Byte array -> Hex String
@@ -42,10 +58,10 @@ namespace HashCalc
                 sb.Append(b.ToString("X2"));
             }
 
-            return sb.ToString();
+            return new FileHash(algo.Name, sb.ToString());
         }
 
-        internal async Task<string> GetFileHash(HashAlgorithm algo)
+        internal async Task<FileHash> GetFileHash(Algorithm algo)
         {
             return await Task.Run(() => HashFile(algo, SelectedFile.FullName));
         }
@@ -55,12 +71,10 @@ namespace HashCalc
             // Update class Variables
         }
 
-        internal Hash(UserFile file)
+        internal Hash(FileInfo file)
         {
             // Update Class Variables
-            this.PassedFilePath = file.FullFilePath;
-            // Get File info for single file
-            this.SelectedFile = GetFileInfo(this.PassedFilePath);
+            this.SelectedFile = file;
         }
     }
 }
