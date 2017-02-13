@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:HashCalc"
         mc:Ignorable="d"
-        Title="TDM Hash Calc" Height="222" Width="500" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" Background="#FF212121" Icon="HDB Logo - Blue 2016 - Transparent.ico">
+        Title="Hash Calc" Height="222" Width="500" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" Background="#FF212121" Icon="HDB Logo - Blue 2016 - Transparent.ico">
 
     <Window.Resources>
         <Style x:Key="SelectFile_Button" TargetType="{x:Type Button}">

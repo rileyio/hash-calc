@@ -16,6 +16,44 @@ namespace HashCalc
         Invalid
     }
 
+    public class Update
+    {
+        // Local Int Version
+        public VersionParser.VP LocalVersion;
+        // Remote Int version (Parsed from String Version)
+        public VersionParser.VP RemoteVersion;
+        // String Version (Format: v.{x}.{x}.{x})
+        public string Tag;
+        // PreRelease Flag
+        public bool Prerelease;
+        // Draft flag
+        public bool Draft;
+        // Release text
+        public string Body;
+        // Release URI
+        public string URI;
+        // Is Update?
+        public bool IsUpdate;
+    }
+
+    class RawUpdate
+    {
+        public string tag_name;
+        public string html_url;
+        public bool draft;
+        public bool prerelease;
+        public List<RawUpdateAsset> assets;
+    }
+
+    class RawUpdateAsset
+    {
+        public string body;
+        public string browser_download_url;
+        public string name;
+        public string content_type;
+        public int size;
+    }
+
     /// <summary>
     /// Pseudo collection of Flat Color Brushes
     /// </summary>

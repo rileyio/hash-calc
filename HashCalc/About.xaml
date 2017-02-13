@@ -10,9 +10,9 @@
         <Image x:Name="image" Height="98" VerticalAlignment="Top" Margin="70,31,70,0" Source="HDB Logo - Blue 2016 - Transparent.ico"/>
         <TextBlock x:Name="textBlock" TextWrapping="Wrap" VerticalAlignment="Top" Margin="10,113,10,0" TextAlignment="Center" FontSize="14"><Run Text="File Hash"/><Run Text=" "/><Run Text="Calculator"/></TextBlock>
         <TextBlock x:Name="textBlock1" TextWrapping="Wrap" Text="By: (Jay) TheJaydox" VerticalAlignment="Top" Margin="10,132,10,0" TextAlignment="Center" FontSize="10"/>
-        <Button x:Name="button" Content="3rd party licenses" HorizontalAlignment="Left" VerticalAlignment="Top" Width="93" Margin="10,9,0,0" FontSize="10"/>
+        <Button x:Name="btnLicenses" Content="3rd party licenses" HorizontalAlignment="Left" VerticalAlignment="Top" Width="93" Margin="10,9,0,0" FontSize="10" Click="btnLicenses_Click"/>
         <Button x:Name="btnSourceCode" Content="Source Code" VerticalAlignment="Top" Margin="0,9,10,0" FontSize="10" HorizontalAlignment="Right" Width="93" Click="btnSourceCode_Click"/>
-        <Button x:Name="button_Copy1" Content="Check for Updates" Margin="10,0,10,10" FontSize="10" Height="17" VerticalAlignment="Bottom" IsEnabled="False"/>
+        <Button x:Name="btnCheckUpdate" Content="Check for Updates" Margin="10,0,10,10" FontSize="10" Height="17" VerticalAlignment="Bottom" Click="btnCheckUpdate_Click"/>
         <TextBlock x:Name="tbxVersion" TextWrapping="Wrap" Text="Version: x.x.x.x" VerticalAlignment="Top" Margin="38,160,38,0" TextAlignment="Center"/>
         <Button x:Name="btnNewIssue" Content="Report Issue" Margin="10,0,10,29" FontSize="10" Height="17" VerticalAlignment="Bottom" Click="btnNewIssue_Click"/>
         <Grid x:Name="gridLicenses" Background="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}" Margin="10,9,10,10" Visibility="Hidden">

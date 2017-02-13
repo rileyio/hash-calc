@@ -36,5 +36,16 @@ namespace HashCalc
         {
             gridLicenses.Visibility = Visibility.Hidden;
         }
+
+        private void btnLicenses_Click(object sender, RoutedEventArgs e)
+        {
+            new Licenses().Show();
+        }
+
+        private void btnCheckUpdate_Click(object sender, RoutedEventArgs e)
+        {
+            Updater updater = new Updater();
+            updater.CheckForUpdate();
+        }
     }
 }
