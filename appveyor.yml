@@ -14,11 +14,3 @@ deploy:
     secure: 7MeZ9kNY6n5afecuSS0NRPrIW5LCno+vmA4/mUlgh33UTVbrFqzcFIdBEWsTu7r7
   on:
     branch: master
-notifications:
-- provider: Email
-  to:
-  - jay@tdm.io
-  subject: hash-calc AppVeyor
-  on_build_success: true
-  on_build_failure: true
-  on_build_status_changed: true
